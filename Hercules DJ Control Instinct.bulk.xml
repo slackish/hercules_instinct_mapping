@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<MixxxControllerPreset mixxxVersion="1.11+" schemaVersion="1">
+    <info>
+        <name>Hercules DJ Control Instinct</name>
+        <author>Aaron McPhall</author>
+        <description>Hercules DJ Control Instinct</description>
+        <devices>
+            <product protocol="bulk" vendor_id="0x06f8" product_id="0xb111" in_epaddr="0x81" out_epaddr="0x03" />
+        </devices>
+    </info>
+    <controller id="Hercules DJ Control Instinct">
+        <scriptfiles>
+            <file functionprefix="" filename="common-bulk-midi.js"/>
+            <file functionprefix="" filename="Hercules DJ Control Instinct-scripts.js"/>
+            <file functionprefix="Instinct" filename="Hercules-Instinct-compat.js"/>
+        </scriptfiles>
+    </controller>
+</MixxxControllerPreset>
