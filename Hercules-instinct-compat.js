@@ -1,4 +1,6 @@
-MP3e2 = Object()
+Instinct = Object()
+
+/*
 
 blink = new Object();
 
@@ -36,9 +38,68 @@ LEDs = [
     ["pfl", simpleButton(16)],
     ["beat_active", simpleButton(18)],
 ];
+*/
 
-MP3e2.init = function(id) {
-    HerculesMP3e2.init(id);
+
+/*
+#  Lets map out the controls
+HerculesInstinct.controls = {
+    0x18: { "channel": 1, "name": "loadA",      "type": "button" },
+    0x32: { "channel": 2, "name": "loadB",      "type": "button" },
+    0x12: { "channel": 1, "name": "pitchbend+",     "type": "button" },
+    0x11: { "channel": 1, "name": "pitchbend-",     "type": "button" },
+    0x2C: { "channel": 2, "name": "pitchbend+",     "type": "button" },
+    0x2B: { "channel": 2, "name": "pitchbend-",     "type": "button" },
+    0x17: { "channel": 1, "name": "sync",           "type": "button" },
+    0x31: { "channel": 2, "name": "sync",           "type": "button" },
+    0x16: { "channel": 1, "name": "play",           "type": "button" },
+    0x30: { "channel": 2, "name": "play",           "type": "button" },
+    0x15: { "channel": 1, "name": "cue",            "type": "button" },
+    0x2F: { "channel": 2, "name": "cue",            "type": "button" },
+    0x1A: { "channel": 1, "name": "scratch",        "type": "button" },
+    0x3F: { "channel": 2, "name": "scratch",        "type": "button" },
+    0x30: { "channel": 1, "name": "wheel",      "type": "pot" },
+    0x31: { "channel": 2, "name": "wheel",      "type": "pot" },
+    0x36: { "channel": 1, "name": "up",         "type": "button" },
+    0x37: { "channel": 1, "name": "down",         "type": "button" },
+    0x39: { "channel": 1, "name": "folder",         "type": "button" },
+    0x38: { "channel": 1, "name": "files",      "type": "button" },
+    0x41: { "channel": 1, "name": "headphone+",      "type": "button" },
+    0x40: { "channel": 1, "name": "headphone-",      "type": "button" },
+
+# these guys are weird
+# will require code
+    0x34: { "channel": 1, "name": "mastertempo", "type": "button" },
+    0x35: { "channel": 2, "name": "mastertempo", "type": "button" },
+
+
+# some weird mode,1,2,3,4 buttons
+# i have to read manual
+    0x01: { "channel": 1, "name": "K1",             "type": "button" },
+    0x02: { "channel": 1, "name": "K2",             "type": "button" },
+    0x03: { "channel": 1, "name": "K3",             "type": "button" },
+    0x04: { "channel": 1, "name": "K4",             "type": "button" },
+    0x05: { "channel": 1, "name": "K5",             "type": "button" },
+    0x06: { "channel": 1, "name": "K6",             "type": "button" },
+    0x07: { "channel": 1, "name": "K7",             "type": "button" },
+    0x08: { "channel": 1, "name": "K8",             "type": "button" },
+    0x15: { "channel": 2, "name": "K1",             "type": "button" },
+    0x16: { "channel": 2, "name": "K2",             "type": "button" },
+    0x17: { "channel": 2, "name": "K3",             "type": "button" },
+    0x18: { "channel": 2, "name": "K4",             "type": "button" },
+    0x19: { "channel": 2, "name": "K5",             "type": "button" },
+    0x1A: { "channel": 2, "name": "K6",             "type": "button" },
+    0x1B: { "channel": 2, "name": "K7",             "type": "button" },
+    0x1C: { "channel": 2, "name": "K8",             "type": "button" },
+
+}
+
+
+*/
+    
+
+Instinct.init = function(id) {
+    HerculesInstinct.init(id);
 
     // Set up LEDs
     for (var i = 0; i < 2; i += 1) {
@@ -57,13 +118,15 @@ MP3e2.init = function(id) {
 var c1 = '[Channel1]'
 var c2 = '[Channel2]'
 
-MP3e2.incomingData = function(data, length) {
+Instinct.incomingData = function(data, length) {
     for (var i = 0; i < length; i += 3) {
         var status = data[i];
         var midino = data[i+1];
         var value = data[i+2];
         var group;
         var f = null;
+
+
 
         if (status == 0xb0) {
             if ((midino > 0x38) || 
@@ -89,11 +152,11 @@ MP3e2.incomingData = function(data, length) {
             case 0x9006: case 0x901a:
             case 0x9007: case 0x901b:
             case 0x9008: case 0x901c:
-                f = HerculesMP3e2.keyButton;
+                f = HerculesInstinct.keyButton;
                 break;
             case 0x900a: case 0x901e:
             case 0x900b: case 0x901f:
-                f = HerculesMP3e2.pitchbend;
+                f = HerculesInstinct.pitchbend;
                 break;
             case 0x900c: case 0x9020:
                 f = "back";
@@ -102,7 +165,7 @@ MP3e2.incomingData = function(data, length) {
                 f = "fwd";
                 break;
             case 0x900e: case 0x9022:
-                f = HerculesMP3e2.cue;
+                f = HerculesInstinct.cue;
                 break;
             case 0x900f: case 0x9023:
                 if (value == 0) return;
@@ -115,13 +178,13 @@ MP3e2.incomingData = function(data, length) {
                 value = ! engine.getValue(group, f);
                 break;
             case 0x9011: case 0x9025:
-                f = HerculesMP3e2.loadTrack;
+                f = HerculesInstinct.loadTrack;
                 break;
             case 0x9012: case 0x9026:
-                f = HerculesMP3e2.sync;
+                f = HerculesInstinct.sync;
                 break;
             case 0x9013: case 0x9027:
-                f = HerculesMP3e2.masterTempo;
+                f = HerculesInstinct.masterTempo;
                 break;
 
 
@@ -136,20 +199,20 @@ MP3e2.incomingData = function(data, length) {
             case 0x902b:
             case 0x902c:
                 group = '[Playlist]';
-                f = HerculesMP3e2.scroll;
+                f = HerculesInstinct.scroll;
                 break;
             case 0x902d:
-                f = HerculesMP3e2.scratch;
+                f = HerculesInstinct.scratch;
                 break;
             case 0x902e:
-                f = HerculesMP3e2.automix;
+                f = HerculesInstinct.automix;
                 break;
 
             case 0xb030: case 0xb031:
-                f = HerculesMP3e2.jogWheel;
+                f = HerculesInstinct.jogWheel;
                 break;
             case 0xb032: case 0xb033:
-                f = HerculesMP3e2.pitch;
+                f = HerculesInstinct.pitch;
                 break;
             case 0xb034: case 0xb039:
                 engine.setValue(group, "volume", script.absoluteLin(value, 0, 1));
@@ -174,5 +237,7 @@ MP3e2.incomingData = function(data, length) {
             f(0, midino, value, status, group);
         }
     }
+
+*/
 }
 
