@@ -75,22 +75,35 @@ HerculesInstinct.controls = {
 
 # some weird mode,1,2,3,4 buttons
 # i have to read manual
-    0x01: { "channel": 1, "name": "K1",             "type": "button" },
-    0x02: { "channel": 1, "name": "K2",             "type": "button" },
-    0x03: { "channel": 1, "name": "K3",             "type": "button" },
-    0x04: { "channel": 1, "name": "K4",             "type": "button" },
-    0x05: { "channel": 1, "name": "K5",             "type": "button" },
-    0x06: { "channel": 1, "name": "K6",             "type": "button" },
-    0x07: { "channel": 1, "name": "K7",             "type": "button" },
-    0x08: { "channel": 1, "name": "K8",             "type": "button" },
-    0x15: { "channel": 2, "name": "K1",             "type": "button" },
-    0x16: { "channel": 2, "name": "K2",             "type": "button" },
-    0x17: { "channel": 2, "name": "K3",             "type": "button" },
-    0x18: { "channel": 2, "name": "K4",             "type": "button" },
-    0x19: { "channel": 2, "name": "K5",             "type": "button" },
-    0x1A: { "channel": 2, "name": "K6",             "type": "button" },
-    0x1B: { "channel": 2, "name": "K7",             "type": "button" },
-    0x1C: { "channel": 2, "name": "K8",             "type": "button" },
+    0x05: { "channel": 1, "name": "K1",             "type": "button" },
+    0x06: { "channel": 1, "name": "K2",             "type": "button" },
+    0x07: { "channel": 1, "name": "K3",             "type": "button" },
+    0x08: { "channel": 1, "name": "K4",             "type": "button" },
+
+    0x1F: { "channel": 2, "name": "K1",             "type": "button" },
+    0x20: { "channel": 2, "name": "K2",             "type": "button" },
+    0x21: { "channel": 2, "name": "K3",             "type": "button" },
+    0x22: { "channel": 2, "name": "K4",             "type": "button" },
+
+    0x09: { "channel": 1, "name": "loopstart",      "type": "button" },
+    0x0A: { "channel": 1, "name": "loopend",        "type": "button" },
+    0x0B: { "channel": 1, "name": "loopdivide",     "type": "button" },
+    0x0C: { "channel": 1, "name": "loopmultiply",   "type": "button" },
+
+    0x23: { "channel": 2, "name": "loopstart",      "type": "button" },
+    0x24: { "channel": 2, "name": "loopend",        "type": "button" },
+    0x25: { "channel": 2, "name": "loopdivide",     "type": "button" },
+    0x26: { "channel": 2, "name": "loopmultiply",   "type": "button" },
+
+    0x01: { "channel": 1, "name": "FX1",             "type": "button" },
+    0x02: { "channel": 1, "name": "FX2",             "type": "button" },
+    0x03: { "channel": 1, "name": "FX3",             "type": "button" },
+    0x04: { "channel": 1, "name": "FX4",             "type": "button" },
+
+    0x1B: { "channel": 2, "name": "FX1",             "type": "button" },
+    0x1C: { "channel": 2, "name": "FX2",             "type": "button" },
+    0x1D: { "channel": 2, "name": "FX3",             "type": "button" },
+    0x1E: { "channel": 2, "name": "FX4",             "type": "button" },
 
 }
 
