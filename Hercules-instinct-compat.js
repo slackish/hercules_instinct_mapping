@@ -58,8 +58,8 @@ HerculesInstinct.controls = {
     0x2F: { "channel": 2, "name": "cue",            "type": "button" },
     0x1A: { "channel": 1, "name": "scratch",        "type": "button" },
     0x3F: { "channel": 2, "name": "scratch",        "type": "button" },
-    0x30: { "channel": 1, "name": "wheel",      "type": "pot" },
-    0x31: { "channel": 2, "name": "wheel",      "type": "pot" },
+#    0x30: { "channel": 1, "name": "wheel",      "type": "pot" },
+#    0x31: { "channel": 2, "name": "wheel",      "type": "pot" },
     0x36: { "channel": 1, "name": "up",         "type": "button" },
     0x37: { "channel": 1, "name": "down",         "type": "button" },
     0x39: { "channel": 1, "name": "folder",         "type": "button" },
@@ -106,10 +106,37 @@ HerculesInstinct.controls = {
     0x1E: { "channel": 2, "name": "FX4",             "type": "button" },
 
 }
-
-
 */
     
+// Number of the standard RPM value. Lower values increase de sensitivity as the really records.
+standardRpm = 33.33;
+
+// The alpha value for the filter (start with 1/8 (0.125) and tune from there)
+alpha = 1/8;
+
+// The beta value for the filter (start with alpha/32 and tune from there)
+beta = alpha/20;
+
+// Timer to disable the scratch if the "jog wheel" is stopped for "x" milliseconds (default = 60)
+scratchResetTime = 60;
+
+// Seconds to the end of track after which cue button blink (default = 30)
+secondsBlink = 30;
+
+// Tune the jog sensitivity when the scratch mode is disabled (default = 1, increase for increase the sensitivity
+jogSensitivity = 0.8;
+
+
+
+superButtonHold = 0;
+scratchButton = 0;
+scratchMode = 0;
+scratchTimer = 0;
+wheelMove = [0,0];
+pitchIncrementRelative = 0;
+//scratchFactor = 0;
+//jogPitchFactor = 0;
+
 
 Instinct.init = function(id) {
     HerculesInstinct.init(id);
@@ -136,25 +163,46 @@ Instinct.incomingData = function(data, length) {
         var status = data[i];
         var midino = data[i+1];
         var value = data[i+2];
-        var group;
+        var group = c1;
         var f = null;
 
-
-
-        if (status == 0xb0) {
-            if ((midino > 0x38) || 
-                ((midino < 0x34) && (midino & 1))) {
+        switch ((status<<8 | midino) {
+            case 0xb031:
                 group = c2;
-            } else {
-                group = c1;
-            }
-        } else if (status == 0x90) {
-            if (midino <= 20) {
-                group = c1;
-            } else if (midino < 40) {
+            case 0xb030:
+                f = HerculesInstinct.jogWheel;
+
+            case 0x9033:
                 group = c2;
-            }
+            case 0x9019:
+                f = HerculesInstinct.loadTrack;
+                break;
+
+            case 0xb035:
+                group = c2;
+            case 0xb034:
+                f = HerculesInstinct.pitch;
+                break;
+
+            case 0x902c:
+            case 0x902b:
+                group = c2;
+            case 0x9011:
+            case 0x9012:
+                f = HerculesInstinct.pitchBend; 
+
         }
+
+        if (typeof(f) == 'string') {
+            engine.setValue(group, f, (value>0)?1:0);
+        } else if (f) {
+            f(0, midino, value, status, group);
+        }
+
+}
+
+
+/*  This is old bits of code, that i'll slowly be stripping from
 
         switch ((status<<8) | midino) {
             case 0x9001: case 0x9015:
@@ -190,9 +238,6 @@ Instinct.incomingData = function(data, length) {
                 f = "pfl";
                 value = ! engine.getValue(group, f);
                 break;
-            case 0x9011: case 0x9025:
-                f = HerculesInstinct.loadTrack;
-                break;
             case 0x9012: case 0x9026:
                 f = HerculesInstinct.sync;
                 break;
@@ -221,9 +266,6 @@ Instinct.incomingData = function(data, length) {
                 f = HerculesInstinct.automix;
                 break;
 
-            case 0xb030: case 0xb031:
-                f = HerculesInstinct.jogWheel;
-                break;
             case 0xb032: case 0xb033:
                 f = HerculesInstinct.pitch;
                 break;
@@ -244,13 +286,22 @@ Instinct.incomingData = function(data, length) {
                 break;
         }
 
-        if (typeof(f) == 'string') {
-            engine.setValue(group, f, (value>0)?1:0);
-        } else if (f) {
-            f(0, midino, value, status, group);
-        }
+
     }
 
 */
 }
 
+HerculesInstinct.wheelOnOff = function() {
+    // Wheel Deck A
+    if (wheelMove[0]) 
+        engine.scratchEnable(1, 128, standardRpm, alpha, beta);
+    else 
+        engine.scratchDisable(1)
+    wheelMove[0] = 0;
+    if (wheelMove[1]) 
+        engine.scratchEnable(2, 128, standardRpm, alpha, beta);
+    else 
+        engine.scratchDisable(2)
+    wheelMove[1] = 0;
+}

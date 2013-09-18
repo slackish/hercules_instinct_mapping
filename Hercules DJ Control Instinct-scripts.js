@@ -362,60 +362,30 @@ HerculesInstinct.knobIncrement = function (group, action, minValue, maxValue, ce
 HerculesInstinct.pitch = function (midino, control, value, status, group) 
 {
 	// Simple: pitch slider
-	// Shifted: Headphone volume and pre/main
-	
-	if (superButtonHold == 1) 
-	{
-		sign = (value == 0x01) ? 1 : -1;
-		
-		if (group == "[Channel1]") 
-		{
-			newValue = HerculesInstinct.knobIncrement("[Master]", "headVolume", 0, 5, 1, 30, sign);
-			engine.setValue("[Master]", "headVolume", newValue);
-		}
-		if (group == "[Channel2]") 
-		{
-			newValue = HerculesInstinct.knobIncrement("[Master]", "headMix", -1, 1, 0, 20, sign);
-			engine.setValue("[Master]", "headMix", newValue);
-		}
-	}
-	else
-	{
-		engine.setValue(group, (value==1) ? "rate_perm_up" : "rate_perm_down", 1);
-		engine.setValue(group, (value==1) ? "rate_perm_up" : "rate_perm_down", 0);
-	}
-	
+	engine.setValue(group, (value==1) ? "rate_perm_up" : "rate_perm_down", 1);
+	engine.setValue(group, (value==1) ? "rate_perm_up" : "rate_perm_down", 0);
 };
 
 HerculesInstinct.pitchbend = function (midino, control, value, status, group) 
 {
 	// Simple: temporary pitch adjust
 	// Shift:  pregain adjust
-	if (superButtonHold == 1 && value) 
-	{
+	if (superButtonHold == 1 && value) {
 		// Pitchbend +
-		if (control == 0x0B || control == 0x1F) 
-		{
+		if (control % 2 == 0) {
 			newValue = HerculesInstinct.knobIncrement(group, "pregain", 0, 4, 1, 20, 1);
 			engine.setValue(group, "pregain", newValue);
-		}
-		// Pitchbend -
-		else 
-		{
+		} else {
+            // Pitchbend -
 			newValue = HerculesInstinct.knobIncrement(group, "pregain", 0, 4, 1, 20, -1);
 			engine.setValue(group, "pregain", newValue);
 		}
-	}
-	else
-	{
+	} else {
 		// Pitchbend +
-		if (control == 0x0B || control == 0x1F) 
-		{
+		if (control % 2 == 0) {
 			engine.setValue(group, "rate_temp_up", value ? 1 : 0);
-		}
-		// Pitchbend -
-		else 
-		{
+		} else {
+            // Pitchbend -
 			engine.setValue(group, "rate_temp_down", value ? 1 : 0);
 		}
 	}
@@ -488,17 +458,14 @@ HerculesInstinct.jogWheel = function (midino, control, value, status, group)
 	var deck = (group == "[Channel1]") ? 1 : 2;
 	
 	// This function is called everytime the jog is moved
-	if (value == 0x01) 
-	{
+	if (value < 0x80) {
 		if (scratchMode) {
 			engine.scratchTick(deck, 1);
 			wheelMove[deck-1] = 1;
 		}
 		else
 			engine.setValue(group, "jog", jogSensitivity);
-	}
-	else 
-	{
+	} else {
 		if (scratchMode) {
 			engine.scratchTick(deck, -1);
 			wheelMove[deck-1] = 1;
