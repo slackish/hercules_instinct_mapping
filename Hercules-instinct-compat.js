@@ -191,6 +191,81 @@ Instinct.incomingData = function(data, length) {
             case 0x9012:
                 f = HerculesInstinct.pitchBend; 
 
+
+            case 0x9031: 
+                group = c2; 
+            case 0x9017:
+                f = HerculesInstinct.sync;
+                break;
+            
+            case 0x9030: 
+                group = c2; 
+            case 0x9016:
+                if (value == 0) return;
+                f = "play";
+                value = ! engine.getValue(group, f);
+                break;
+
+            case 0x902f: 
+                group = c2;
+            case 0x9015:
+                f = HerculesInstinct.cue;
+                break;
+
+            case 0x902d: 
+                group = c2;
+            case 0x9013:
+                f = "back";
+                break;
+
+            case 0x902d: 
+                group = c2;
+            case 0x9014:
+                f = "fwd";
+                break;
+
+            case 0x9036:
+                group = '[Playlist]';
+                f = 'SelectPrevTrack';
+                break;
+            case 0x9037:
+                group = '[Playlist]';
+                f = 'SelectNextTrack';
+                break;
+
+            case 0x903d:
+                f = HerculesInstinct.scratch;
+                break;
+
+            case 0xb03b: 
+                group = c2;
+            case 0xb036:
+                engine.setValue(group, "volume", script.absoluteLin(value, 0, 1));
+                break;
+ 
+            case 0xb037: 
+                group = c2;
+            case 0xb03c:
+                engine.setValue(group, "filterHigh", script.absoluteNonLin(value, 0, 1, 4));
+                break;
+
+            case 0xb038: 
+                group = c2;
+            case 0xb03d:
+                engine.setValue(group, "filterMid", script.absoluteNonLin(value, 0, 1, 4));
+                break;
+
+            case 0xb039: 
+                group = c2;
+            case 0xb03e:
+                engine.setValue(group, "filterLow", script.absoluteNonLin(value, 0, 1, 4));
+                break;
+                
+            case 0xb03a:
+                engine.setValue('[Master]', 'crossfader', script.absoluteLin(value, -1, 1));
+                break;
+           
+
         }
 
         if (typeof(f) == 'string') {
@@ -215,74 +290,13 @@ Instinct.incomingData = function(data, length) {
             case 0x9008: case 0x901c:
                 f = HerculesInstinct.keyButton;
                 break;
-            case 0x900a: case 0x901e:
-            case 0x900b: case 0x901f:
-                f = HerculesInstinct.pitchbend;
-                break;
-            case 0x900c: case 0x9020:
-                f = "back";
-                break;
-            case 0x900d: case 0x9021:
-                f = "fwd";
-                break;
-            case 0x900e: case 0x9022:
-                f = HerculesInstinct.cue;
-                break;
-            case 0x900f: case 0x9023:
-                if (value == 0) return;
-                f = "play";
-                value = ! engine.getValue(group, f);
-                break;
             case 0x9010: case 0x9024:
                 if (value == 0) return;
                 f = "pfl";
                 value = ! engine.getValue(group, f);
                 break;
-            case 0x9012: case 0x9026:
-                f = HerculesInstinct.sync;
-                break;
             case 0x9013: case 0x9027:
                 f = HerculesInstinct.masterTempo;
-                break;
-
-
-            case 0x9029:
-                group = '[Playlist]';
-                f = 'SelectPrevTrack';
-                break;
-            case 0x902a:
-                group = '[Playlist]';
-                f = 'SelectNextTrack';
-                break;
-            case 0x902b:
-            case 0x902c:
-                group = '[Playlist]';
-                f = HerculesInstinct.scroll;
-                break;
-            case 0x902d:
-                f = HerculesInstinct.scratch;
-                break;
-            case 0x902e:
-                f = HerculesInstinct.automix;
-                break;
-
-            case 0xb032: case 0xb033:
-                f = HerculesInstinct.pitch;
-                break;
-            case 0xb034: case 0xb039:
-                engine.setValue(group, "volume", script.absoluteLin(value, 0, 1));
-                break;
-            case 0xb035: case 0xb03a:
-                engine.setValue(group, "filterHigh", script.absoluteNonLin(value, 0, 1, 4));
-                break;
-            case 0xb036: case 0xb03b:
-                engine.setValue(group, "filterMid", script.absoluteNonLin(value, 0, 1, 4));
-                break;
-            case 0xb037: case 0xb03c:
-                engine.setValue(group, "filterLow", script.absoluteNonLin(value, 0, 1, 4));
-                break;
-            case 0xb038:
-                engine.setValue('[Master]', 'crossfader', script.absoluteLin(value, -1, 1));
                 break;
         }
 
